@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ug8duHNZf20=",
+  "dgSpecHash": "W/Bp4DbGOjE=",
   "success": true,
-  "projectFilePath": "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
+  "projectFilePath": "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
   "expectedPackageFiles": [
     "/Users/dariademchik/.nuget/packages/microsoft.entityframeworkcore/9.0.0/microsoft.entityframeworkcore.9.0.0.nupkg.sha512",
     "/Users/dariademchik/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.0/microsoft.entityframeworkcore.abstractions.9.0.0.nupkg.sha512",

@@ -711,11 +711,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
+      "projectUniqueName": "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
       "projectName": "ITschoolMVC.Infrastructure",
-      "projectPath": "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
+      "projectPath": "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Infrastructure/ITschoolMVC.Infrastructure.csproj",
       "packagesPath": "/Users/dariademchik/.nuget/packages/",
-      "outputPath": "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Infrastructure/obj/",
+      "outputPath": "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Infrastructure/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/dariademchik/.nuget/NuGet/NuGet.Config"
@@ -731,8 +731,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Domain/ITschoolMVC.Domain.csproj": {
-              "projectPath": "/Users/dariademchik/uni/Projects/ISTTP/ProgrammingSchool/src/ITschoolMVC/ITschoolMVC.Domain/ITschoolMVC.Domain.csproj"
+            "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Domain/ITschoolMVC.Domain.csproj": {
+              "projectPath": "/Users/dariademchik/uni/ProgrammingSchool/ITschoolMVC/ITschoolMVC.Domain/ITschoolMVC.Domain.csproj"
             }
           }
         }
