@@ -1,0 +1,79 @@
+@model ITschoolMVC.Domain.Entities.Course
+
+@{
+    ViewData["Title"] = "Редагування курсу";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden ultra-shadow glass-card">
+                <div class="p-4 text-white text-center" style="background: linear-gradient(135deg, #f59e0b, #d97706) !important;">
+                    <h2 class="fw-bold m-0">
+                        <i class="bi bi-pencil-square me-2"></i>Редагувати курс
+                    </h2>
+                    <p class="m-0 opacity-75 small">Змінюйте дані та зберігайте оновлення</p>
+                </div>
+
+                <div class="card-body p-5">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CreatedAt" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Title" class="form-control border-0 bg-light rounded-3" placeholder="Назва" />
+                            <label asp-for="Title"></label>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden">
+                            <span class="input-group-text border-0 bg-light text-muted fw-bold">$</span>
+                            <div class="form-floating flex-grow-1">
+                                <input asp-for="Price" type="number" min="0" step="1" class="form-control border-0 bg-light" placeholder="Вартість">
+                                <label asp-for="Price"></label>
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small w-100"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Description" class="form-control border-0 bg-light rounded-3" style="height: 150px" placeholder="Опис"></textarea>
+                            <label asp-for="Description"></label>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-warning btn-lg w-100 rounded-pill shadow text-white fw-bold">
+                                <i class="bi bi-check-lg me-2"></i>Оновити курс
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg w-100 rounded-pill">
+                                Скасувати
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    Курс створено: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ultra-shadow {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+    }
+    .form-control:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 0.25 margin-bottom: 10px;
+        border: 1px solid #f59e0b !important;
+    }
+</style>

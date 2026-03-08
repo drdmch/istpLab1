@@ -1,0 +1,46 @@
+@model ITschoolMVC.Domain.Entities.Lesson
+
+@{
+    ViewData["Title"] = "Додати урок";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-primary p-4 text-white text-center" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0) !important;">
+                    <h3 class="fw-bold m-0">Новий урок</h3>
+                    <p class="m-0 opacity-75">Курс: @ViewBag.CourseTitle</p>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <input type="hidden" asp-for="CourseId" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Title" class="form-control border-0 bg-light" placeholder="Назва" />
+                            <label asp-for="Title">Назва уроку</label>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="OrderNumber" type="number" min="1" class="form-control border-0 bg-light" placeholder="Порядок" />
+                            <label asp-for="OrderNumber">Порядковий номер</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="VideoUrl" class="form-control border-0 bg-light" placeholder="Відео URL" />
+                            <label asp-for="VideoUrl">Посилання на відео (YouTube/Vimeo)</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow">Опублікувати урок</button>
+                            <a asp-action="Index" asp-route-courseId="@Model.CourseId" class="btn btn-link text-muted">Скасувати</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

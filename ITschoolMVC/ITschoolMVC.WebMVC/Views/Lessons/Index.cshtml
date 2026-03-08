@@ -1,0 +1,88 @@
+@model IEnumerable<ITschoolMVC.Domain.Entities.Lesson>
+
+@{
+    ViewData["Title"] = "Уроки курсу";
+}
+
+<div class="container mt-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Courses" asp-action="Index" class="text-decoration-none text-primary fw-semibold">
+                    <i class="bi bi-chevron-left"></i> Назад до курсів
+                </a>
+            </li>
+            <li class="breadcrumb-item active">@ViewBag.CourseTitle</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="bg-dark p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #212529, #343a40) !important;">
+            <div>
+                <h2 class="text-white fw-bold m-0">@ViewBag.CourseTitle</h2>
+                <p class="text-white-50 m-0 small">Список завантажених уроків</p>
+            </div>
+            <a asp-action="Create" asp-route-courseId="@ViewBag.CourseId" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="bi bi-plus-lg me-2"></i>Додати урок
+            </a>
+        </div>
+        
+        <div class="card-body p-0">
+            @if (!Model.Any())
+            {
+                <div class="p-5 text-center">
+                    <div class="display-1 text-light mb-3"><i class="bi bi-journal-code"></i></div>
+                    <h4 class="text-muted fw-light">Уроків для цього курсу ще не додано</h4>
+                </div>
+            }
+            else
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var item in Model.OrderBy(l => l.OrderNumber))
+                    {
+                        <div class="list-group-item p-4 hover-bg border-start-0 border-end-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-4 text-primary fs-4 fw-bold">
+                                        #@item.OrderNumber
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-1 text-dark">@item.Title</h5>
+                                        @if (!string.IsNullOrEmpty(item.VideoUrl))
+                                        {
+                                            <span class="badge bg-light text-primary border border-primary-subtle rounded-pill">
+                                                <i class="bi bi-play-circle me-1"></i> Відео доступне
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary rounded-pill px-3 me-2">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-bg {
+        transition: all 0.2s ease;
+    }
+    .hover-bg:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.002);
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "|";
+        color: #dee2e6;
+    }
+</style>
