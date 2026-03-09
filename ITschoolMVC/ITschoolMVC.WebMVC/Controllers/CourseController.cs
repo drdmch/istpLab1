@@ -18,6 +18,15 @@ public class CoursesController : Controller
 
     public async Task<IActionResult> Index(string searchString)
     {
+        int currentUserId = 1; 
+
+        var enrolledCourseIds = await _context.Enrollments
+            .Where(e => e.UserId == currentUserId)
+            .Select(e => e.CourseId)
+            .ToListAsync();
+
+        ViewBag.EnrolledCourseIds = enrolledCourseIds;
+
         var coursesQuery = from c in _context.Courses
                         select c;
 
@@ -26,15 +35,7 @@ public class CoursesController : Controller
             coursesQuery = coursesQuery.Where(s => s.Title.Contains(searchString));
         }
 
-        ViewData["CurrentFilter"] = searchString;
-
         return View(await coursesQuery.ToListAsync());
-    }
-
-    public IActionResult Details(int? id)
-    {
-        if (id == null) return NotFound();
-        return RedirectToAction("Index", "Lessons", new { courseId = id });
     }
 
     public IActionResult Create()
@@ -143,6 +144,21 @@ public class CoursesController : Controller
 
         TempData["SuccessMessage"] = $"Ви успішно записалися на курс '{course.Title}'!";
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var course = await _context.Courses
+            .Include(c => c.Lessons) 
+            .Include(c => c.Level)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (course == null)
+        {
+            return NotFound();
+        }
+
+        return View(course);
     }
 
     public async Task<IActionResult> MyCourses()

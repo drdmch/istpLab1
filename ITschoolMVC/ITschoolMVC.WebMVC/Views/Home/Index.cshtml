@@ -1,8 +1,61 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<ITschoolMVC.Domain.Entities.Course>
+
+@{
+    ViewData["Title"] = "Головна";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="p-5 mb-5 rounded-4 ultra-shadow bg-white text-center border-0">
+        <h1 class="display-4">Ласкаво просимо до ITschool! </h1>
+        <div class="mt-4">
+           <p>Ми навчаємо C#, SQL, Python та багато іншого.</p>
+            <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Courses")" role="button">Переглянути всі курси</a>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">Наші нові курси</h2>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm hover-card rounded-4 overflow-hidden">
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fw-bold">
+                                @(item.Level?.Name ?? "Всі рівні")
+                            </span>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">@item.Title</h5>
+                        <p class="card-text text-muted small">@item.Description</p>
+                        <a href="@Url.Action("Index", "Courses")" class="btn btn-outline-primary rounded-pill w-100 mt-3 shadow-sm">Детальніше</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .text-gradient {
+        background: linear-gradient(90deg, #0d6efd, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .ultra-shadow {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+    }
+    .hover-card {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    .hover-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12) !important;
+    }
+</style>
+

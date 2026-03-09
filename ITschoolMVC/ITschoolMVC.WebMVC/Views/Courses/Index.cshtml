@@ -77,6 +77,11 @@
                 <div class="col">
                     <div class="card h-100 border-0 shadow-sm hover-card rounded-4 overflow-hidden">
                         <div class="card-body p-4">
+                            @{
+                                var enrolledIds = ViewBag.EnrolledCourseIds as List<int?>;
+                                bool isEnrolled = enrolledIds != null && enrolledIds.Contains(item.Id);
+                            }
+                            
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fw-bold">
                                     $@item.Price
@@ -88,21 +93,39 @@
                             </p>
 
                             <div class="mt-4">
-                                <form asp-action="Enroll" method="post">
-                                    <input type="hidden" name="courseId" value="@item.Id" />
-                                    <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm fw-bold py-2">
-                                        <i class="bi bi-mortarboard-fill me-2"></i>Записатися на курс
-                                    </button>
-                                </form>
+                                @if (isEnrolled)
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary w-100 rounded-pill shadow-sm fw-bold py-2">
+                                        <i class="bi bi-play-circle-fill me-2"></i>Детальніше
+                                    </a>
+                                }
+                                else
+                                {
+                                    <form asp-action="Enroll" method="post">
+                                        <input type="hidden" name="courseId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm fw-bold py-2">
+                                            <i class="bi bi-mortarboard-fill me-2"></i>Записатися на курс
+                                        </button>
+                                    </form>
+                                }
                             </div>
                         </div>
 
                         <div class="card-footer bg-transparent border-0 p-4 pt-0">
                             <hr class="mt-0 mb-3 opacity-10">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted small italic">
-                                    <i class="bi bi-info-circle me-1"></i> Доступ після запису
-                                </span>
+                                @if (isEnrolled)
+                                {
+                                    <span class="text-success small fw-bold">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Ви вже на курсі
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small italic">
+                                        <i class="bi bi-info-circle me-1"></i> Доступ після запису
+                                    </span>
+                                }
                                 
                                 <div class="btn-group">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-link btn-sm text-decoration-none text-muted p-1" title="Редагувати">

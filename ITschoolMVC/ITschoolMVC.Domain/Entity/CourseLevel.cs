@@ -1,3 +1,14 @@
+// using System.ComponentModel.DataAnnotations.Schema;
+
+// namespace ITschoolMVC.Domain.Entities;
+
+// [Table("courselevels")]
+// public class CourseLevel : Entity
+// {
+//     [Column("name")] public string Name { get; set; } = null!;
+//     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+// }
+
 using System;
 using System.Collections.Generic;
 

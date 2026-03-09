@@ -18,12 +18,24 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
+
+public async Task<IActionResult> Index()
+    {
+        var latestCourses = await _context.Courses
+            .Include(c => c.Level)
+            .OrderByDescending(c => c.CreatedAt)
+            .Take(3)
+            .ToListAsync();
+
+        return View(latestCourses);
+    }
+
+public IActionResult About()
     {
         return View();
     }
 
-    public async Task<IActionResult> Profile()
+public async Task<IActionResult> Profile()
     {
         var user = await _context.Users
             .Include(u => u.Role)
@@ -31,7 +43,7 @@ public class HomeController : Controller
 
         if (user == null)
         {
-            return Content("База порожня для EF. Перевір рядок підключення в appsettings.json");
+            return Content("База порожня.");
         }
 
         return View(user);
@@ -39,7 +51,7 @@ public class HomeController : Controller
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
@@ -55,20 +67,20 @@ public async Task<IActionResult> EditProfile()
 [HttpPost]
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> EditProfile(User user)
-{
-    var existingUser = await _context.Users.FirstOrDefaultAsync();
-
-    if (existingUser != null)
     {
-        existingUser.FirstName = user.FirstName;
-        existingUser.LastName = user.LastName;
-        existingUser.About = user.About;
+        var existingUser = await _context.Users.FirstOrDefaultAsync();
 
-        _context.Update(existingUser);
-        await _context.SaveChangesAsync();
-        
-        return RedirectToAction(nameof(Profile));
+        if (existingUser != null)
+        {
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+            existingUser.About = user.About;
+
+            _context.Update(existingUser);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction(nameof(Profile));
+        }
+        return View(user);
     }
-    return View(user);
-}
 }

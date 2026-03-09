@@ -1,0 +1,68 @@
+@model IEnumerable<ITschoolMVC.Domain.Entities.Enrollment>
+
+@{
+    ViewData["Title"] = "Моє навчання";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Мої курси</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Ви ще не записані на жоден курс. <a href="@Url.Action("Index", "Courses")">Переглянути каталог</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var enrollment in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@enrollment.Course?.Title</h5>
+                            <p class="card-text text-muted">
+                                @(enrollment.Course?.Description?.Length > 100 
+                                    ? enrollment.Course.Description.Substring(0, 100) + "..." 
+                                    : enrollment.Course?.Description)
+                            </p>
+                            
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: @enrollment.Progress%" 
+                                     aria-valuenow="@enrollment.Progress" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <small class="text-muted">Прогрес: @enrollment.Progress%</small>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a asp-action="Details" asp-route-id="@enrollment.CourseId" class="btn btn-primary w-100 rounded-pill shadow-sm fw-bold">
+                                <i class="bi bi-play-circle-fill me-2"></i>Продовжити навчання
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .ultra-shadow {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+    }
+    .hover-card {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    .hover-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12) !important;
+    }
+    .italic {
+        font-style: italic;
+    }
+</style>

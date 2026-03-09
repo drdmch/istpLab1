@@ -19,18 +19,19 @@ public class ITschoolContext : DbContext
     public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
     public DbSet<CoursePriceHistory> PriceHistories { get; set; }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     if (!optionsBuilder.IsConfigured)
-    //     {
-    //         optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=psp;Username=postgres;Password=postgres");
-    //     }
-    // }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ITschoolContext).Assembly);
+
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(entity.DisplayName());
+
+            foreach (var property in entity.GetProperties())
+            {
+                property.SetColumnName(property.Name.ToLower());
+            }
+        }
     }
 }
