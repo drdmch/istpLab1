@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ITschoolMVC.Infrastructure;
 using ITschoolMVC.Domain.Entities;
 using System.Xml.Serialization;
@@ -40,6 +41,7 @@ public class CoursesController : Controller
 
     public IActionResult Create()
     {
+        ViewBag.LevelId = new SelectList(_context.CourseLevels, "Id", "Name");
         return View();
     }
 
@@ -55,6 +57,7 @@ public class CoursesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewBag.LevelId = new SelectList(_context.CourseLevels, "Id", "Name", course.LevelId);
         return View(course);
     }
 
@@ -77,7 +80,7 @@ public class CoursesController : Controller
             var existingCourse = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
             if (existingCourse != null)
             {
-                course.CreatedAt = existingCourse.CreatedAt;
+                course.CreatedAt = DateTime.SpecifyKind(existingCourse.CreatedAt, DateTimeKind.Utc);     
             }
             
             course.UpdatedAt = DateTime.UtcNow; 

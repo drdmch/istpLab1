@@ -14,7 +14,13 @@
                             <label asp-for="Title"></label>
                             <span asp-validation-for="Title" class="text-danger small"></span>
                         </div>
-
+                        <div class="mb-3">
+                            <label asp-for="LevelId" class="form-label fw-bold">Рівень складності</label>
+                            <select asp-for="LevelId" class="form-select rounded-pill shadow-sm" asp-items="ViewBag.LevelId">
+                                <option value="">-- Оберіть рівень --</option>
+                            </select>
+                            <span asp-validation-for="LevelId" class="text-danger small"></span>
+                        </div>
                         <div class="form-floating mb-3">
                             <input asp-for="Price" type="number" min="0" step="1" class="form-control border-0 bg-light" placeholder="Ціна" />
                             <label asp-for="Price"></label>
