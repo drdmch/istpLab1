@@ -167,7 +167,6 @@ public class CoursesController : Controller
         return View(myEnrollments);
     }
 
-    // Тільки POST метод для миттєвого завантаження
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Import(IFormFile coursesFile, CancellationToken ct)
@@ -197,25 +196,5 @@ public class CoursesController : Controller
             FileDownloadName = $"courses_{DateTime.Now:yyyyMMdd}.xlsx"
         };
     }
-
-    public async Task<IActionResult> ExportPricesXml()
-    {
-        var courses = await _context.Courses
-            .Select(c => new CourseDto { Id = c.Id, Title = c.Title, Price = c.Price })
-            .ToListAsync();
-
-        var serializer = new XmlSerializer(typeof(List<CourseDto>));
-        using var stringWriter = new StringWriter();
-        serializer.Serialize(stringWriter, courses);
-        var xmlData = System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString());
-
-        return File(xmlData, "application/xml", $"PriceReport_{DateTime.Now:ddMMyy}.xml");
-    }
 }
 
-public class CourseDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = null!;
-    public decimal Price { get; set; }
-}
