@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 py-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 py-3 shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold text-gradient" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-code-slash me-2"></i>ITschool
@@ -23,23 +23,28 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">Про школу</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">Про школу</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Курси</a>
+                            <a class="nav-link" asp-area="" asp-controller="Courses" asp-action="Index">Курси</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="MyCourses">
+                            <a class="nav-link" asp-area="" asp-controller="Courses" asp-action="MyCourses">
                                 <i class="bi bi-book me-1"></i>Моє навчання
                             </a>
                         </li>
                     </ul>
 
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Profile">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item me-3">
+                            <a class="nav-link fw-bold" asp-area="" asp-controller="Home" asp-action="Profile">
                                 <i class="bi bi-person-circle me-1"></i>Мій профіль
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-link nav-link py-2 px-0 px-lg-2" id="bd-theme" type="button" onclick="toggleTheme()">
+                                <i class="bi bi-sun-fill" id="theme-icon-active"></i>
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -52,14 +57,38 @@
         </main>
     </div>
 
-            <footer class="border-top footer text-muted bg-white py-3 mt-5">
-                <div class="container d-flex justify-content-between">
-                    <span>&copy; 2026 - ITschool - Лабораторна робота 1</span>
-                </div>
-            </footer>
+    <footer class="border-top footer text-muted py-3 mt-5">
+        <div class="container d-flex justify-content-between">
+            <span>&copy; 2026 - ITschool - Лабораторна робота 1</span>
+        </div>
+    </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+            const icon = document.getElementById('theme-icon-active');
+            if (theme === 'dark') {
+                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
+            } else {
+                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        }
+
+        (function () {
+            setTheme(localStorage.getItem('theme') || 'light');
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

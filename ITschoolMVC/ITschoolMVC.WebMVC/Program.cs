@@ -1,4 +1,6 @@
+using ITschoolMVC.Domain.Entities;
 using ITschoolMVC.Infrastructure;
+using ITschoolMVC.WebMVC.Infrastructure.Services; 
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args); 
@@ -9,6 +11,7 @@ builder.Services.AddDbContext<ITschoolContext>(options =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<IDataPortServiceFactory<Course>, CourseDataPortServiceFactory>();
 var app = builder.Build(); 
 
 if (!app.Environment.IsDevelopment())

@@ -1,20 +1,22 @@
+using ITschoolMVC.WebMVC.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ITschoolMVC.Infrastructure;
 using ITschoolMVC.Domain.Entities;
 using System.Xml.Serialization;
-using System.IO;
 
 namespace ITschoolMVC.WebMVC.Controllers;
 
 public class CoursesController : Controller
 {
     private readonly ITschoolContext _context;
+    private readonly IDataPortServiceFactory<Course> _factory;
 
-    public CoursesController(ITschoolContext context)
+    public CoursesController(ITschoolContext context, IDataPortServiceFactory<Course> factory)
     {
         _context = context;
+        _factory = factory;
     }
 
     public async Task<IActionResult> Index(string searchString)
@@ -28,8 +30,7 @@ public class CoursesController : Controller
 
         ViewBag.EnrolledCourseIds = enrolledCourseIds;
 
-        var coursesQuery = from c in _context.Courses
-                        select c;
+        var coursesQuery = from c in _context.Courses select c;
 
         if (!string.IsNullOrEmpty(searchString))
         {
@@ -94,12 +95,8 @@ public class CoursesController : Controller
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
-
-        var course = await _context.Courses
-            .FirstOrDefaultAsync(m => m.Id == id);
-            
+        var course = await _context.Courses.FirstOrDefaultAsync(m => m.Id == id);
         if (course == null) return NotFound();
-
         return View(course);
     }
 
@@ -121,7 +118,6 @@ public class CoursesController : Controller
     public async Task<IActionResult> Enroll(int courseId)
     {
         int currentUserId = 1; 
-
         var isAlreadyEnrolled = await _context.Enrollments
             .AnyAsync(e => e.CourseId == courseId && e.UserId == currentUserId);
 
@@ -156,24 +152,50 @@ public class CoursesController : Controller
             .Include(c => c.Level)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if (course == null)
-        {
-            return NotFound();
-        }
-
+        if (course == null) return NotFound();
         return View(course);
     }
 
     public async Task<IActionResult> MyCourses()
     {
         int currentUserId = 1;
-
         var myEnrollments = await _context.Enrollments
             .Where(e => e.UserId == currentUserId)
             .Include(e => e.Course)
             .ToListAsync();
 
         return View(myEnrollments);
+    }
+
+    // Тільки POST метод для миттєвого завантаження
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Import(IFormFile coursesFile, CancellationToken ct)
+    {
+        if (coursesFile == null || coursesFile.Length == 0) return RedirectToAction(nameof(Index));
+
+        var importService = _factory.GetImportService(coursesFile.ContentType);
+        using (var stream = coursesFile.OpenReadStream())
+        {
+            await importService.ImportFromStreamAsync(stream, ct);
+        }
+
+        TempData["SuccessMessage"] = "Дані успішно оновлено з Excel!";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Export(CancellationToken ct)
+    {
+        var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        var exportService = _factory.GetExportService(contentType);
+        var memoryStream = new MemoryStream();
+        await exportService.WriteToAsync(memoryStream, ct);
+        memoryStream.Position = 0;
+        return new FileStreamResult(memoryStream, contentType)
+        {
+            FileDownloadName = $"courses_{DateTime.Now:yyyyMMdd}.xlsx"
+        };
     }
 
     public async Task<IActionResult> ExportPricesXml()
@@ -185,29 +207,9 @@ public class CoursesController : Controller
         var serializer = new XmlSerializer(typeof(List<CourseDto>));
         using var stringWriter = new StringWriter();
         serializer.Serialize(stringWriter, courses);
-
         var xmlData = System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString());
 
         return File(xmlData, "application/xml", $"PriceReport_{DateTime.Now:ddMMyy}.xml");
-    }
-
-    public async Task<IActionResult> ExportPrices()
-    {
-        var courses = await _context.Courses.ToListAsync();
-
-        var builder = new System.Text.StringBuilder();
-        builder.AppendLine("ID;Назва курсу;Ціна ($)"); 
-
-        foreach (var course in courses)
-        {
-            builder.AppendLine($"{course.Id};{course.Title};{course.Price}");
-        }
-
-        var csvData = System.Text.Encoding.UTF8.GetPreamble()
-            .Concat(System.Text.Encoding.UTF8.GetBytes(builder.ToString()))
-            .ToArray();
-
-        return File(csvData, "text/csv", $"CoursePrices_{DateTime.Now:ddMMyyyy}.csv");
     }
 }
 
